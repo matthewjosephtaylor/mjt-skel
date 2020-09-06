@@ -1,0 +1,2 @@
+PROJECTS_DIR=~/MJT
+SKEL_DIR="${PROJECTS_DIR}/mjt-skel"

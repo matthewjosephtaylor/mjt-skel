@@ -1,0 +1,39 @@
+#!/usr/bin/env bash
+
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+usage () {
+  echo -e "Usage: `basename $0`"
+  echo -e "Example: ./`basename $0`"
+}
+
+if [[ "$1" =~ ^-h$ || "$1" =~ ^--help$ ]]; then usage exit 1; fi
+
+set -e
+
+source "${SCRIPT_DIR}/CONFIG"
+
+if [ ! -f "./package.json" ]; then
+  npm init
+fi
+
+# make sure package.json exists before continuing
+test -f ./package.json
+
+npm install -D typescript "@types/opentype.js" \
+  terser ts-loader \
+  webpack webpack-cli webpack-dev-server \
+  webpack-node-externals \
+  clean-webpack-plugin \
+  tsconfig-paths-webpack-plugin
+
+npm install jquery
+
+for template_dir in typescript webpack
+do
+	cp -n ${SKEL_DIR}/${template_dir}/* . || true
+done
+
+mkdir -p scripts
+cp -n ${SKEL_DIR}/scripts/* "scripts/" || true
+
